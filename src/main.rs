@@ -1,3 +1,5 @@
+use clap::*; //{arg, Command, command};
+
 fn main() {
-    println!("Hello, world!");
+    let matches = command!().get_matches();
 }
