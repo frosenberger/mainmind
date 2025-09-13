@@ -1,9 +1,11 @@
+use std::io;
+
 use clap::*;
-use colored::Colorize;
 
 use crate::colors::Color;
 
 mod colors;
+mod tui;
 
 #[derive(Parser)]
 #[command(version, about)]
@@ -18,11 +20,11 @@ enum Command {
     Play,
 }
 
-fn main() {
+fn main() -> io::Result<()> {
     let cli = Cli::parse();
     match &cli.command {
         Command::Generate => print_code(gen_code(4)),
-        Command::Play => println!("{}", "Not implemented yet".yellow()),
+        Command::Play => tui::run(),
     }
 }
 
@@ -34,10 +36,11 @@ fn gen_code(length: usize) -> Vec<Color> {
     code
 }
 
-fn print_code(code: Vec<Color>) {
+fn print_code(code: Vec<Color>) -> io::Result<()> {
     print!("[ ");
     for color in code {
         print!("{} ", color);
     }
     println!("]");
+    Ok(())
 }
