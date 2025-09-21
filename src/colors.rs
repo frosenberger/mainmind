@@ -20,6 +20,19 @@ impl Color {
     }
 }
 
+impl Clone for Color {
+    fn clone(&self) -> Self {
+        match self {
+            Self::RED => Self::RED,
+            Self::GREEN => Self::GREEN,
+            Self::YELLOW => Self::YELLOW,
+            Self::BLUE => Self::BLUE,
+            Self::MAGENTA => Self::MAGENTA,
+            Self::CYAN => Self::CYAN,
+        }
+    }
+}
+
 impl Display for Color {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
@@ -29,6 +42,23 @@ impl Display for Color {
             Color::BLUE => write!(f, "{}", "B".bold().blue()),
             Color::MAGENTA => write!(f, "{}", "M".bold().magenta()),
             Color::CYAN => write!(f, "{}", "C".bold().cyan()),
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, PartialOrd)]
+pub enum Match {
+    NO,
+    PARTIAL,
+    FULL,
+}
+
+impl Display for Match {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            Match::NO => write!(f, " "),
+            Match::PARTIAL => write!(f, "{}", "O".bold().white()),
+            Match::FULL => write!(f, "{}", "X".bold().black().on_white()),
         }
     }
 }
