@@ -53,6 +53,16 @@ pub enum Match {
     FULL,
 }
 
+impl Clone for Match {
+    fn clone(&self) -> Self {
+        match self {
+            Self::NO => Self::NO,
+            Self::PARTIAL => Self::PARTIAL,
+            Self::FULL => Self::FULL,
+        }
+    }
+}
+
 impl Display for Match {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {

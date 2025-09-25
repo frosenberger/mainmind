@@ -4,17 +4,18 @@ use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
     DefaultTerminal, Frame,
     buffer::Buffer,
-    layout::Rect,
+    layout::{self, Constraint, Layout, Rect},
     style::Stylize,
-    symbols::border,
-    text::{Line, Text},
     widgets::{Block, Paragraph, Widget},
 };
 
+use crate::engine::Game;
+
 #[derive(Debug, Default)]
 pub struct App {
-    counter: u8,
     exit: bool,
+    game: Game,
+    input: String,
 }
 
 impl App {
@@ -46,8 +47,18 @@ impl App {
     fn handle_key_event(&mut self, key_event: KeyEvent) {
         match key_event.code {
             KeyCode::Char('q') => self.exit(),
-            KeyCode::Left => self.decrement_counter(),
-            KeyCode::Right => self.increment_counter(),
+            KeyCode::Char('r') => self.input.push('R'),
+            KeyCode::Char('g') => self.input.push('G'),
+            KeyCode::Char('y') => self.input.push('Y'),
+            KeyCode::Char('b') => self.input.push('B'),
+            KeyCode::Char('m') => self.input.push('M'),
+            KeyCode::Char('c') => self.input.push('C'),
+            KeyCode::Backspace => {
+                if self.input.len() > 0 {
+                    self.input.truncate(self.input.len() - 1)
+                }
+            }
+            KeyCode::Enter => {} // TODO confirm guess
             _ => {}
         }
     }
@@ -55,41 +66,18 @@ impl App {
     fn exit(&mut self) {
         self.exit = true;
     }
-
-    fn increment_counter(&mut self) {
-        self.counter += 1;
-    }
-
-    fn decrement_counter(&mut self) {
-        self.counter -= 1;
-    }
 }
 
 impl Widget for &App {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let title = Line::from(" Counter App Tutorial ".bold());
-        let instructions = Line::from(vec![
-            " Decrement ".into(),
-            "<Left>".blue().bold(),
-            " Increment ".into(),
-            "<Right>".blue().bold(),
-            " Quit ".into(),
-            "<Q> ".blue().bold(),
-        ]);
-        let block = Block::bordered()
-            .title(title.centered())
-            .title_bottom(instructions.centered())
-            .border_set(border::THICK);
-
-        let counter_text = Text::from(vec![Line::from(vec![
-            "Value: ".into(),
-            self.counter.to_string().yellow(),
-        ])]);
-
-        Paragraph::new(counter_text)
-            .centered()
-            .block(block)
-            .render(area, buf);
+        let layout = Layout::vertical([Constraint::Length(9), Constraint::Length(3)]).split(area);
+        let top = Block::bordered()
+            .title(" Mainmind ".bold())
+            .title_alignment(layout::Alignment::Center);
+        let bot = Block::bordered();
+        let input = Paragraph::new(self.input.clone()).block(bot);
+        top.render(layout[0], buf);
+        input.render(layout[1], buf);
     }
 }
 

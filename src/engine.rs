@@ -1,10 +1,12 @@
 use crate::colors::{Color, Match};
 
+#[derive(Debug, Default)]
 pub struct Game {
     code: Vec<Color>,
-    guesses: Vec<Vec<Color>>,
+    pub guesses: Vec<Vec<Color>>,
+    pub matches: Vec<Vec<Match>>,
     max_rounds: u8,
-    round: u8,
+    pub round: u8,
 }
 
 impl Game {
@@ -12,6 +14,7 @@ impl Game {
         Game {
             code: gen_code(4),
             guesses: Vec::new(),
+            matches: Vec::new(),
             max_rounds: 7,
             round: 1,
         }
@@ -32,6 +35,7 @@ impl Game {
                 matches.push(Match::NO);
             }
         }
+        self.matches.push(matches.clone());
         if matches.iter().all(|m| *m == Match::FULL) {
             Ok(())
         } else {
@@ -61,6 +65,6 @@ mod test {
             diff_code = gen_code(4)
         }
         assert_eq!(game.check_guess(&code), Ok(()));
-        assert_ne!(game.check_guess(&gen_code(4)), Ok(()));
+        assert_ne!(game.check_guess(&diff_code), Ok(()));
     }
 }
