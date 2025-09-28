@@ -1,11 +1,12 @@
-use crate::colors::{Color, Match};
+use crate::code::{Code, Match};
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct Game {
-    code: Vec<Color>,
-    pub guesses: Vec<Vec<Color>>,
+    code: Vec<Code>,
+    pub code_length: usize,
+    pub guesses: Vec<Vec<Code>>,
     pub matches: Vec<Vec<Match>>,
-    max_rounds: u8,
+    pub max_rounds: u8,
     pub round: u8,
 }
 
@@ -13,6 +14,7 @@ impl Game {
     pub fn new() -> Game {
         Game {
             code: gen_code(4),
+            code_length: 4,
             guesses: Vec::new(),
             matches: Vec::new(),
             max_rounds: 7,
@@ -20,7 +22,7 @@ impl Game {
         }
     }
 
-    pub fn check_guess(&mut self, guess: &Vec<Color>) -> Result<(), Vec<Match>> {
+    pub fn check_guess(&mut self, guess: &Vec<Code>) -> Result<(), Vec<Match>> {
         self.guesses.push(guess.to_vec());
         let mut matches: Vec<Match> = Vec::new();
         for i in 0..guess.len() {
@@ -45,10 +47,16 @@ impl Game {
     }
 }
 
-pub fn gen_code(length: usize) -> Vec<Color> {
+impl Default for Game {
+    fn default() -> Self {
+        Game::new()
+    }
+}
+
+pub fn gen_code(length: usize) -> Vec<Code> {
     let mut code = Vec::with_capacity(length);
     for _i in 0..length {
-        code.push(Color::random());
+        code.push(Code::random());
     }
     code
 }

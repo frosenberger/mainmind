@@ -6,16 +6,18 @@ use ratatui::{
     buffer::Buffer,
     layout::{self, Constraint, Layout, Rect},
     style::Stylize,
-    widgets::{Block, Paragraph, Widget},
+    widgets::{Block, Widget},
 };
 
-use crate::engine::Game;
+use crate::{code::Code, engine::Game, tui::code_line::Code_Line};
+
+mod code_line;
 
 #[derive(Debug, Default)]
 pub struct App {
     exit: bool,
     game: Game,
-    input: String,
+    input: Vec<Code>,
 }
 
 impl App {
@@ -46,20 +48,26 @@ impl App {
 
     fn handle_key_event(&mut self, key_event: KeyEvent) {
         match key_event.code {
-            KeyCode::Char('q') => self.exit(),
-            KeyCode::Char('r') => self.input.push('R'),
-            KeyCode::Char('g') => self.input.push('G'),
-            KeyCode::Char('y') => self.input.push('Y'),
-            KeyCode::Char('b') => self.input.push('B'),
-            KeyCode::Char('m') => self.input.push('M'),
-            KeyCode::Char('c') => self.input.push('C'),
+            KeyCode::Char('q') | KeyCode::Char('Q') => self.exit(),
+            KeyCode::Char('r') | KeyCode::Char('R') => self.add_code(Code::RED),
+            KeyCode::Char('g') | KeyCode::Char('G') => self.add_code(Code::GREEN),
+            KeyCode::Char('y') | KeyCode::Char('Y') => self.add_code(Code::YELLOW),
+            KeyCode::Char('b') | KeyCode::Char('B') => self.add_code(Code::BLUE),
+            KeyCode::Char('m') | KeyCode::Char('M') => self.add_code(Code::MAGENTA),
+            KeyCode::Char('c') | KeyCode::Char('C') => self.add_code(Code::CYAN),
             KeyCode::Backspace => {
                 if self.input.len() > 0 {
-                    self.input.truncate(self.input.len() - 1)
+                    self.input.pop();
                 }
             }
             KeyCode::Enter => {} // TODO confirm guess
             _ => {}
+        }
+    }
+
+    fn add_code(&mut self, code: Code) {
+        if self.game.code_length > self.input.len() {
+            self.input.push(code);
         }
     }
 
@@ -75,9 +83,13 @@ impl Widget for &App {
             .title(" Mainmind ".bold())
             .title_alignment(layout::Alignment::Center);
         let bot = Block::bordered();
-        let input = Paragraph::new(self.input.clone()).block(bot);
+        let bot_inner = bot.inner(layout[1]);
+        let code_input = Code_Line {
+            code: self.input.clone(),
+        };
         top.render(layout[0], buf);
-        input.render(layout[1], buf);
+        bot.render(layout[1], buf);
+        code_input.render(bot_inner, buf);
     }
 }
 

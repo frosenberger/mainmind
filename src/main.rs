@@ -2,9 +2,9 @@ use std::io;
 
 use clap::*;
 
-use crate::colors::Color;
+use crate::code::Code;
 
-mod colors;
+mod code;
 mod engine;
 mod tui;
 
@@ -29,7 +29,7 @@ fn main() -> io::Result<()> {
     }
 }
 
-fn print_code(code: Vec<Color>) -> io::Result<()> {
+fn print_code(code: Vec<Code>) -> io::Result<()> {
     print!("[ ");
     for color in code {
         print!("{} ", color);
