@@ -57,7 +57,7 @@ impl Display for Code {
     }
 }
 
-#[derive(Debug, PartialEq, PartialOrd)]
+#[derive(Debug, Eq, PartialEq, PartialOrd, Ord)]
 pub enum Match {
     No,
     Partial,
