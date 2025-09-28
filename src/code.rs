@@ -6,12 +6,12 @@ use strum::*;
 
 #[derive(EnumIter, Debug, PartialEq, PartialOrd)]
 pub enum Code {
-    RED,
-    GREEN,
-    YELLOW,
-    BLUE,
-    MAGENTA,
-    CYAN,
+    Red,
+    Green,
+    Yellow,
+    Blue,
+    Magenta,
+    Cyan,
 }
 
 impl Code {
@@ -21,12 +21,12 @@ impl Code {
 
     pub fn glyph(&self) -> char {
         match &self {
-            Code::RED => 'R',
-            Code::GREEN => 'G',
-            Code::YELLOW => 'Y',
-            Code::BLUE => 'B',
-            Code::MAGENTA => 'M',
-            Code::CYAN => 'C',
+            Code::Red => 'R',
+            Code::Green => 'G',
+            Code::Yellow => 'Y',
+            Code::Blue => 'B',
+            Code::Magenta => 'M',
+            Code::Cyan => 'C',
         }
     }
 }
@@ -34,12 +34,12 @@ impl Code {
 impl Clone for Code {
     fn clone(&self) -> Self {
         match self {
-            Self::RED => Self::RED,
-            Self::GREEN => Self::GREEN,
-            Self::YELLOW => Self::YELLOW,
-            Self::BLUE => Self::BLUE,
-            Self::MAGENTA => Self::MAGENTA,
-            Self::CYAN => Self::CYAN,
+            Self::Red => Self::Red,
+            Self::Green => Self::Green,
+            Self::Yellow => Self::Yellow,
+            Self::Blue => Self::Blue,
+            Self::Magenta => Self::Magenta,
+            Self::Cyan => Self::Cyan,
         }
     }
 }
@@ -47,29 +47,29 @@ impl Clone for Code {
 impl Display for Code {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
-            Code::RED => write!(f, "{}", &self.glyph().to_string().bold().red()),
-            Code::GREEN => write!(f, "{}", &self.glyph().to_string().bold().green()),
-            Code::YELLOW => write!(f, "{}", &self.glyph().to_string().bold().yellow()),
-            Code::BLUE => write!(f, "{}", &self.glyph().to_string().bold().blue()),
-            Code::MAGENTA => write!(f, "{}", &self.glyph().to_string().bold().magenta()),
-            Code::CYAN => write!(f, "{}", &self.glyph().to_string().bold().cyan()),
+            Code::Red => write!(f, "{}", &self.glyph().to_string().bold().red()),
+            Code::Green => write!(f, "{}", &self.glyph().to_string().bold().green()),
+            Code::Yellow => write!(f, "{}", &self.glyph().to_string().bold().yellow()),
+            Code::Blue => write!(f, "{}", &self.glyph().to_string().bold().blue()),
+            Code::Magenta => write!(f, "{}", &self.glyph().to_string().bold().magenta()),
+            Code::Cyan => write!(f, "{}", &self.glyph().to_string().bold().cyan()),
         }
     }
 }
 
 #[derive(Debug, PartialEq, PartialOrd)]
 pub enum Match {
-    NO,
-    PARTIAL,
-    FULL,
+    No,
+    Partial,
+    Full,
 }
 
 impl Match {
     pub fn glyph(&self) -> char {
         match &self {
-            Match::NO => ' ',
-            Match::PARTIAL => 'O',
-            Match::FULL => 'X',
+            Match::No => ' ',
+            Match::Partial => 'O',
+            Match::Full => 'X',
         }
     }
 }
@@ -77,9 +77,9 @@ impl Match {
 impl Clone for Match {
     fn clone(&self) -> Self {
         match self {
-            Self::NO => Self::NO,
-            Self::PARTIAL => Self::PARTIAL,
-            Self::FULL => Self::FULL,
+            Self::No => Self::No,
+            Self::Partial => Self::Partial,
+            Self::Full => Self::Full,
         }
     }
 }
@@ -87,9 +87,9 @@ impl Clone for Match {
 impl Display for Match {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
-            Match::NO => write!(f, "{}", &self.glyph().to_string()),
-            Match::PARTIAL => write!(f, "{}", &self.glyph().to_string().bold().white()),
-            Match::FULL => write!(f, "{}", &self.glyph().to_string().bold().black().on_white()),
+            Match::No => write!(f, "{}", &self.glyph().to_string()),
+            Match::Partial => write!(f, "{}", &self.glyph().to_string().bold().white()),
+            Match::Full => write!(f, "{}", &self.glyph().to_string().bold().black().on_white()),
         }
     }
 }

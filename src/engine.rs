@@ -30,15 +30,15 @@ impl Game {
             let contained = self.code.contains(guess_at_i);
             let contained_at_i = self.code.get(i).unwrap() == guess_at_i;
             if contained_at_i {
-                matches.push(Match::FULL);
+                matches.push(Match::Full);
             } else if contained {
-                matches.push(Match::PARTIAL);
+                matches.push(Match::Partial);
             } else {
-                matches.push(Match::NO);
+                matches.push(Match::No);
             }
         }
         self.matches.push(matches.clone());
-        if matches.iter().all(|m| *m == Match::FULL) {
+        if matches.iter().all(|m| *m == Match::Full) {
             Ok(())
         } else {
             self.round += 1;

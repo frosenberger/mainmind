@@ -9,9 +9,10 @@ use ratatui::{
     widgets::{Block, Widget},
 };
 
-use crate::{code::Code, engine::Game, tui::code_line::Code_Line};
+use crate::{code::Code, engine::Game, tui::code_line::CodeLine};
 
 mod code_line;
+mod match_line;
 
 #[derive(Debug, Default)]
 pub struct App {
@@ -49,12 +50,12 @@ impl App {
     fn handle_key_event(&mut self, key_event: KeyEvent) {
         match key_event.code {
             KeyCode::Char('q') | KeyCode::Char('Q') => self.exit(),
-            KeyCode::Char('r') | KeyCode::Char('R') => self.add_code(Code::RED),
-            KeyCode::Char('g') | KeyCode::Char('G') => self.add_code(Code::GREEN),
-            KeyCode::Char('y') | KeyCode::Char('Y') => self.add_code(Code::YELLOW),
-            KeyCode::Char('b') | KeyCode::Char('B') => self.add_code(Code::BLUE),
-            KeyCode::Char('m') | KeyCode::Char('M') => self.add_code(Code::MAGENTA),
-            KeyCode::Char('c') | KeyCode::Char('C') => self.add_code(Code::CYAN),
+            KeyCode::Char('r') | KeyCode::Char('R') => self.add_code(Code::Red),
+            KeyCode::Char('g') | KeyCode::Char('G') => self.add_code(Code::Green),
+            KeyCode::Char('y') | KeyCode::Char('Y') => self.add_code(Code::Yellow),
+            KeyCode::Char('b') | KeyCode::Char('B') => self.add_code(Code::Blue),
+            KeyCode::Char('m') | KeyCode::Char('M') => self.add_code(Code::Magenta),
+            KeyCode::Char('c') | KeyCode::Char('C') => self.add_code(Code::Cyan),
             KeyCode::Backspace => {
                 if self.input.len() > 0 {
                     self.input.pop();
@@ -82,9 +83,9 @@ impl Widget for &App {
         let top = Block::bordered()
             .title(" Mainmind ".bold())
             .title_alignment(layout::Alignment::Center);
-        let bot = Block::bordered();
+        let bot = Block::bordered().title("Input");
         let bot_inner = bot.inner(layout[1]);
-        let code_input = Code_Line {
+        let code_input = CodeLine {
             code: self.input.clone(),
         };
         top.render(layout[0], buf);
