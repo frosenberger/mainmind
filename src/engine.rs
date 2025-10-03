@@ -71,15 +71,13 @@ pub fn gen_code(length: usize) -> Vec<Code> {
 }
 
 mod test {
-    use super::*;
-
     #[test]
     fn test_game() {
-        let mut game = Game::new();
+        let mut game = super::Game::new();
         let code = game.code.clone();
-        let mut diff_code = gen_code(4);
+        let mut diff_code = super::gen_code(4);
         while diff_code == code {
-            diff_code = gen_code(4)
+            diff_code = super::gen_code(4)
         }
         assert_eq!(game.check_guess(&code), Ok(()));
         assert_ne!(game.check_guess(&diff_code), Ok(()));

@@ -4,8 +4,9 @@ use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
     DefaultTerminal, Frame,
     buffer::Buffer,
-    layout::{self, Constraint, Layout, Rect},
+    layout::*,
     style::Stylize,
+    text::ToLine,
     widgets::{Block, BorderType, Widget},
 };
 
@@ -88,33 +89,18 @@ impl App {
 
 impl Widget for &App {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let width = Layout::horizontal([Constraint::Length(26)])
-            .flex(layout::Flex::Center)
-            .split(area);
-        let layout = Layout::vertical([
-            Constraint::Length(3),
-            Constraint::Length((self.game.max_rounds * 3 + 2).into()),
-            Constraint::Length(3),
-        ])
-        .split(width[0]);
-        let top = Block::bordered()
-            .border_type(BorderType::Rounded)
-            .title(" Mainmind ".bold())
-            .title_alignment(layout::Alignment::Center);
-        let top_content = top.inner(layout[1]);
-        top.render(layout[1], buf);
-        let result_list = ResultList::of_game(&self.game);
-        result_list.render(top_content, buf);
+        let app_layout = AppLayout::of_game(&self.game, area, buf);
 
-        let bot = Block::bordered()
-            .border_type(BorderType::Rounded)
-            .title("Input");
-        let bot_content = bot.inner(layout[2]);
+        let result_list = ResultList::of_game(&self.game);
+        result_list.render(app_layout.top, buf);
+
         let code_input = CodeLine {
             code: self.input.clone(),
         };
-        bot.render(layout[2], buf);
-        code_input.render(bot_content, buf);
+        code_input.render(app_layout.bot, buf);
+
+        let status = "foo bar".to_line();
+        status.render(app_layout.status, buf);
     }
 }
 
@@ -123,4 +109,59 @@ pub fn run() -> io::Result<()> {
     let app_result = App::default().run(&mut terminal);
     ratatui::restore();
     app_result
+}
+
+struct AppLayout {
+    top: Rect,
+    bot: Rect,
+    status: Rect,
+}
+
+impl AppLayout {
+    fn of_game(game: &Game, area: Rect, buf: &mut Buffer) -> AppLayout {
+        let full_height = Layout::vertical([Constraint::Percentage(100)])
+            .flex(Flex::Center)
+            .split(area);
+        let full_width = Layout::horizontal([Constraint::Percentage(100)])
+            .flex(Flex::Center)
+            .split(full_height[0]);
+        let vert_split =
+            Layout::vertical([Constraint::Fill(1), Constraint::Length(3)]).split(full_width[0]);
+        let center = Layout::horizontal([
+            Constraint::Fill(1),
+            Constraint::Length(26),
+            Constraint::Fill(1),
+        ])
+        .split(vert_split[0]);
+        let layout = Layout::vertical([
+            Constraint::Fill(1),
+            Constraint::Length((game.max_rounds * 3 + 2).into()),
+            Constraint::Length(3),
+            Constraint::Fill(1),
+        ])
+        .split(center[1]);
+
+        let top_block = Block::bordered()
+            .border_type(BorderType::Rounded)
+            .title(" Mainmind ".bold())
+            .title_alignment(Alignment::Center);
+        let top = top_block.inner(layout[1]);
+        top_block.render(layout[1], buf);
+
+        let bot_block = Block::bordered()
+            .border_type(BorderType::Rounded)
+            .title("Input");
+        let bot = bot_block.inner(layout[2]);
+        bot_block.render(layout[2], buf);
+
+        let status_block = Block::bordered()
+            .border_type(BorderType::Plain)
+            .title_position(ratatui::widgets::block::Position::Top)
+            .title_alignment(Alignment::Center)
+            .title("Status");
+        let status = status_block.inner(vert_split[1]);
+        status_block.render(vert_split[1], buf);
+
+        AppLayout { top, bot, status }
+    }
 }

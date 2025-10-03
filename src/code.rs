@@ -4,7 +4,7 @@ use colored::Colorize;
 use rand::{seq::IteratorRandom, *};
 use strum::*;
 
-#[derive(EnumIter, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, EnumIter, PartialEq, PartialOrd)]
 pub enum Code {
     Red,
     Green,
@@ -31,19 +31,6 @@ impl Code {
     }
 }
 
-impl Clone for Code {
-    fn clone(&self) -> Self {
-        match self {
-            Self::Red => Self::Red,
-            Self::Green => Self::Green,
-            Self::Yellow => Self::Yellow,
-            Self::Blue => Self::Blue,
-            Self::Magenta => Self::Magenta,
-            Self::Cyan => Self::Cyan,
-        }
-    }
-}
-
 impl Display for Code {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
@@ -57,7 +44,7 @@ impl Display for Code {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, PartialOrd, Ord)]
+#[derive(Clone, Debug, Eq, PartialEq, PartialOrd, Ord)]
 pub enum Match {
     No,
     Partial,
@@ -70,16 +57,6 @@ impl Match {
             Match::No => ' ',
             Match::Partial => 'O',
             Match::Full => 'X',
-        }
-    }
-}
-
-impl Clone for Match {
-    fn clone(&self) -> Self {
-        match self {
-            Self::No => Self::No,
-            Self::Partial => Self::Partial,
-            Self::Full => Self::Full,
         }
     }
 }
