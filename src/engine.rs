@@ -2,7 +2,7 @@ use crate::code::{Code, Match};
 
 #[derive(Debug)]
 pub struct Game {
-    code: Vec<Code>,
+    pub code: Vec<Code>,
     pub code_length: u8,
     pub guesses: Vec<Vec<Code>>,
     pub matches: Vec<Vec<Match>>,
@@ -28,13 +28,16 @@ impl Game {
         self.guesses.push(guess.to_vec());
         let result = self.check_guess(guess);
         match result {
-            Ok(_) => self.won = true,
+            Ok(matches) => {
+                self.matches.push(matches);
+                self.won = true
+            }
             Err(matches) => self.matches.push(matches),
         }
         self.round += 1;
     }
 
-    pub fn check_guess(&mut self, guess: &Vec<Code>) -> Result<(), Vec<Match>> {
+    pub fn check_guess(&mut self, guess: &Vec<Code>) -> Result<Vec<Match>, Vec<Match>> {
         let mut matches: Vec<Match> = Vec::new();
         for i in 0..guess.len() {
             let guess_at_i = guess.get(i).unwrap();
@@ -49,7 +52,7 @@ impl Game {
             }
         }
         if matches.iter().all(|m| *m == Match::Full) {
-            Ok(())
+            Ok(matches)
         } else {
             Err(matches)
         }

@@ -23,6 +23,7 @@ mod result_list;
 
 #[derive(Debug, Default)]
 pub struct App {
+    debug: bool,
     exit: bool,
     game: Game,
     input: Vec<Code>,
@@ -99,14 +100,26 @@ impl Widget for &App {
         };
         code_input.render(app_layout.bot, buf);
 
-        let status = "foo bar".to_line();
-        status.render(app_layout.status, buf);
+        if self.game.won {
+            "You win!"
+                .to_line()
+                .centered()
+                .italic()
+                .slow_blink()
+                .render(app_layout.status, buf);
+        } else if self.debug {
+            let code = self.game.code.clone();
+            let status = format!("(solution: {:?})", code);
+            status.to_line().render(app_layout.status, buf);
+        }
     }
 }
 
-pub fn run() -> io::Result<()> {
+pub fn run(debug: bool) -> io::Result<()> {
     let mut terminal = ratatui::init();
-    let app_result = App::default().run(&mut terminal);
+    let mut app = App::default();
+    app.debug = debug;
+    let app_result = app.run(&mut terminal);
     ratatui::restore();
     app_result
 }

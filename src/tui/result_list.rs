@@ -4,13 +4,8 @@ use ratatui::{
 };
 
 use crate::{
-    code::{Code, Match},
     engine::Game,
-    tui::{
-        code_line::CodeLine,
-        guess_line::{self, GuessLine},
-        match_line::MatchLine,
-    },
+    tui::{code_line::CodeLine, guess_line::GuessLine, match_line::MatchLine},
 };
 
 pub struct ResultList {

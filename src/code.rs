@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
-use colored::Colorize;
 use rand::{seq::IteratorRandom, *};
+use ratatui::style::Stylize;
 use strum::*;
 
 #[derive(Clone, Debug, EnumIter, PartialEq, PartialOrd)]
@@ -65,8 +65,8 @@ impl Display for Match {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
             Match::No => write!(f, "{}", &self.glyph().to_string()),
-            Match::Partial => write!(f, "{}", &self.glyph().to_string().bold().white()),
-            Match::Full => write!(f, "{}", &self.glyph().to_string().bold().black().on_white()),
+            Match::Partial => write!(f, "{}", &self.glyph().to_string().bold().white().on_gray()),
+            Match::Full => write!(f, "{}", &self.glyph().to_string().bold().black().on_gray()),
         }
     }
 }

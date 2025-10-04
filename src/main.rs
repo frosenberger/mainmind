@@ -13,6 +13,8 @@ mod tui;
 struct Cli {
     #[command(subcommand)]
     command: Command,
+    #[arg(short, long)]
+    debug: bool,
 }
 
 #[derive(Subcommand)]
@@ -25,7 +27,7 @@ fn main() -> io::Result<()> {
     let cli = Cli::parse();
     match &cli.command {
         Command::Generate => print_code(engine::gen_code(4)),
-        Command::Play => tui::run(),
+        Command::Play => tui::run(cli.debug),
     }
 }
 

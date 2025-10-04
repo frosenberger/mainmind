@@ -11,8 +11,8 @@ pub struct CodeLine {
 }
 
 impl From<Vec<Code>> for CodeLine {
-    fn from(value: Vec<Code>) -> Self {
-        CodeLine { code: value }
+    fn from(code: Vec<Code>) -> Self {
+        CodeLine { code }
     }
 }
 
